@@ -6,7 +6,7 @@ import { DataTypes,
 import db from '.';
 // import OtherModel from './OtherModel';
 
-class Teams extends Model<InferAttributes<Teams>,
+export default class Teams extends Model<InferAttributes<Teams>,
 InferCreationAttributes<Teams>> {
   declare id: CreationOptional<number>;
   declare teamName: string;
@@ -22,6 +22,7 @@ Teams.init({
   teamName: {
     type: DataTypes.STRING,
     allowNull: false,
+    field: 'team_name',
   },
 }, {
   sequelize: db,
