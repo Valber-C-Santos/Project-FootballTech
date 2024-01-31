@@ -1,45 +1,39 @@
 import * as sinon from 'sinon';
-import * as chai from 'chai';
+import * as chai from 'chai'
+
 // @ts-ignore
+
 import chaiHttp = require('chai-http');
-
-import { app } from '../app';
-import Example from '../database/models/ExampleModel';
-
-import { Response } from 'superagent';
+import { App } from "../app";
+import Teams from '../database/models/teamsModel';
+import {teamSaoPaulo, teamSP} from './mocks/teams.mock';
 
 chai.use(chaiHttp);
 
+const { app } = new App();
 const { expect } = chai;
 
-describe('Seu teste', () => {
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
+  beforeEach(function() {
+    sinon.restore()
+  })
 
-  // let chaiHttpResponse: Response;
-
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
-
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
-
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
-
-  //   expect(...)
-  // });
-
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
+  it('Verifica se /teams retorna todos os times', async function() {
+    sinon.stub(Teams, 'findAll').resolves(teamSP as any);
+    const {status, body} = await chai.request(app).get('/teams');
+    expect(status).to.be.equal(200);
+    expect(body).to.deep.equal(teamSP);
   });
-});
+
+  it('Verifica se filtra pelo id os times na toda /teams/id', async function() {
+    sinon.stub(Teams,'findByPk').resolves(teamSaoPaulo as any);
+    const {status, body} = await chai.request(app).get('/teams/16');
+    expect(status).to.be.equal(200);
+    expect(body).to.deep.equal(teamSaoPaulo);
+  });
+
+  it('Verifica se id inexistente retorna mensagem de erro e status 404 ', async function() {
+    sinon.stub(Teams, 'findByPk').resolves(null);
+    const {status, body} = await chai.request(app).get('/teams/190');
+    expect(status).to.be.equal(404);
+    expect(body).to.deep.equal({message: 'Team not found'})
+  });
