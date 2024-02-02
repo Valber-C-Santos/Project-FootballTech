@@ -10,4 +10,9 @@ export default class UserController {
     const response = await this.NewService.loginService(email, password);
     res.status(mapStatusHTTP(response.status)).json(response.data);
   }
+
+  static async logoutController(_req: Request, res: Response) {
+    const { role } = res.locals.auth;
+    res.status(200).json({ role });
+  }
 }

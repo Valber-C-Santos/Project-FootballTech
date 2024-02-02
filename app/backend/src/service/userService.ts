@@ -21,7 +21,7 @@ export default class UserService {
       return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
     }
     const token = jwt.sign(
-      { id: userLogin.id },
+      { id: userLogin.id, role: userLogin.role },
       process.env.JWT_SECRET as string,
       { expiresIn: '7d' },
     );
