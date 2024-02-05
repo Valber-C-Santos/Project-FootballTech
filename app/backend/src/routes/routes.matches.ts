@@ -14,4 +14,10 @@ routerInstance.patch(
   (req: Request, res: Response) => matchController.finishMatches(req, res),
 );
 
+routerInstance.patch(
+  '/:id',
+  authorizationToken.verifyToken,
+  (req: Request, res: Response) => matchController.updatedMatchesControll(req, res),
+);
+
 export default routerInstance;

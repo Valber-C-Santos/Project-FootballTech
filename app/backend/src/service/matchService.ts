@@ -19,4 +19,16 @@ export default class ServiceMatch {
     return {
       status: 'SUCCESSFUL', message: 'Match updated' };
   }
+
+  public async updatedMatchesService(
+    homeTeamGoals: number,
+    awayTeamGoals: number,
+    id: string,
+  ) {
+    await this.model.UpdatedMatches(homeTeamGoals, awayTeamGoals, id);
+    return {
+      status: 'SUCCESSFUL',
+      data: 'Match updated',
+    };
+  }
 }

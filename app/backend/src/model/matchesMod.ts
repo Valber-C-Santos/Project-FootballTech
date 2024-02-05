@@ -26,4 +26,17 @@ export default class ModMatches implements Imatches {
     await newMatchUpdate.update({ id: match.id, inProgress: false });
     return newMatchUpdate;
   }
+
+  async UpdatedMatches(
+    homeTeamGoals: number,
+    awayTeamGoals: number,
+    id: string,
+  ): Promise<MatchesInterface> {
+    const matchUpdate = await this.model.findByPk(id);
+    if (!matchUpdate) {
+      throw new Error('Match not found');
+    }
+    await matchUpdate.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
+    return matchUpdate;
+  }
 }
