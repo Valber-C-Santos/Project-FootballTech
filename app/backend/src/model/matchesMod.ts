@@ -17,4 +17,13 @@ export default class ModMatches implements Imatches {
     }
     return allMatches;
   }
+
+  async matchesFinish(id: string, match: MatchesInterface): Promise<MatchesInterface> {
+    const newMatchUpdate = await this.model.findByPk(id);
+    if (!newMatchUpdate) {
+      throw new Error('Match not found');
+    }
+    await newMatchUpdate.update({ id: match.id, inProgress: false });
+    return newMatchUpdate;
+  }
 }

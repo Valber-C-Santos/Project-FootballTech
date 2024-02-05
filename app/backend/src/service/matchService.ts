@@ -9,8 +9,14 @@ export default class ServiceMatch {
   ) {}
 
   public async getAllMatches(inProgress?: boolean): Promise<ServiceResponse<MatchesInterface[]>> {
-    const matchs = await this.model.findAllMatches(inProgress);
+    const matches = await this.model.findAllMatches(inProgress);
     return {
-      status: 'SUCCESSFUL', data: matchs };
+      status: 'SUCCESSFUL', data: matches };
+  }
+
+  public async matchesFinished(id: string, match: MatchesInterface) {
+    await this.model.matchesFinish(id, match);
+    return {
+      status: 'SUCCESSFUL', message: 'Match updated' };
   }
 }
