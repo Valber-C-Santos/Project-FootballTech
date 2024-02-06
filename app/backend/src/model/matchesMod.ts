@@ -1,3 +1,4 @@
+import { DataMatches } from '../Interfaces/typeMatches';
 import { MatchesInterface } from '../Interfaces/matchesInterface';
 import { Imatches } from '../Interfaces/Imatches';
 import Matches from '../database/models/matchesModel';
@@ -38,5 +39,15 @@ export default class ModMatches implements Imatches {
     }
     await matchUpdate.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
     return matchUpdate;
+  }
+
+  async createMatches(match: DataMatches): Promise<MatchesInterface> {
+    const { homeTeamId, homeTeamGoals, awayTeamGoals, awayTeamId } = match;
+    const createNewMatch = await this.model.create({ homeTeamId,
+      awayTeamId,
+      awayTeamGoals,
+      homeTeamGoals,
+      inProgress: true });
+    return createNewMatch;
   }
 }

@@ -29,4 +29,10 @@ export default class MatchController {
       .service.updatedMatchesService(homeTeamGoals, awayTeamGoals, id);
     res.status(mapStatusHTTP(status)).json(data);
   }
+
+  public async createMatchesControll(req: Request, res: Response) {
+    const newMatch = req.body;
+    const { status, data } = await this.service.createMatchesService(newMatch);
+    res.status(mapStatusHTTP(status)).json(data);
+  }
 }
