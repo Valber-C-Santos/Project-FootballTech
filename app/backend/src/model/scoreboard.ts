@@ -1,4 +1,4 @@
-import { MatchesInterface } from './matchesInterface';
+import { MatchesInterface } from '../Interfaces/matchesInterface';
 
 const totalGames = (teamId: number, matches: MatchesInterface[]): number => {
   const allGames = matches.filter(

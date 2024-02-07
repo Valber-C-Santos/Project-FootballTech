@@ -8,7 +8,7 @@ import { totalGames,
   goalsOwn,
   goalsFavor,
   totalPoints,
-} from '../Interfaces/scoreboard';
+} from '../model/scoreboard';
 
 export default class ScoreBoardService {
   constructor(
@@ -17,18 +17,19 @@ export default class ScoreBoardService {
   ) {}
 
   public async getScoreBoardService() {
-    const teams = await this.teamModel.findAll();
-    const matches = await this.model.findAllMatches(undefined);
-    const teamsWithScore = teams.map((team) => ({
+    const Allteams = await this.teamModel.findAll();
+    const AllMatches = await this.model.findAllMatches(undefined);
+    const teamsThatScore = Allteams.map((team) => ({
       name: team.teamName,
-      totalGames: totalGames(team.id, matches),
-      totalVictories: totalVictoryHome(team.id, matches) + totalVictoriesAway(team.id, matches),
-      totalLosses: totalLosses(team.id, matches),
-      totalDraws: totalDraws(team.id, matches),
-      goalsFavor: goalsFavor(team.id, matches),
-      goalsOwn: goalsOwn(team.id, matches),
-      totalPoints: totalPoints(team.id, matches),
+      totalGames: totalGames(team.id, AllMatches),
+      totalVictories:
+      totalVictoryHome(team.id, AllMatches) + totalVictoriesAway(team.id, AllMatches),
+      totalLosses: totalLosses(team.id, AllMatches),
+      totalDraws: totalDraws(team.id, AllMatches),
+      goalsFavor: goalsFavor(team.id, AllMatches),
+      goalsOwn: goalsOwn(team.id, AllMatches),
+      totalPoints: totalPoints(team.id, AllMatches),
     }));
-    return { status: 'SUCCESSFUL', data: teamsWithScore };
+    return { status: 'SUCCESSFUL', data: teamsThatScore };
   }
 }
