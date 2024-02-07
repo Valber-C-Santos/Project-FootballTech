@@ -24,7 +24,7 @@ const { expect } = chai;
     expect(body).to.deep.equal(teamSP);
   });
 
-  it('Verifica se filtra pelo id os times na toda /teams/id', async function() {
+  it('Verifica se filtra pelo id os times na rota /teams/id', async function() {
     sinon.stub(Teams,'findByPk').resolves(teamSaoPaulo as any);
     const {status, body} = await chai.request(app).get('/teams/16');
     expect(status).to.be.equal(200);

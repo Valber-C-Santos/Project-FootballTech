@@ -42,7 +42,7 @@ describe('Matches', function () {
     expect(status).to.be.equal(200)
     expect(body).to.be.deep.equal(matchesMock.finishMatch)
   })
-  
+
   it('Testa se é possível criar uma partida com POST para /matches', async function () {
     sinon.stub(jwt, 'verify').resolves({ role: "admin"});
     const newTeam = Matches.build(matchesMock.NewTeamFromDB);
