@@ -2,6 +2,7 @@ import { DataMatches } from '../Interfaces/typeMatches';
 import { MatchesInterface } from '../Interfaces/matchesInterface';
 import { Imatches } from '../Interfaces/Imatches';
 import Matches from '../database/models/matchesModel';
+import Teams from '../database/models/teamsModel';
 
 export default class ModMatches implements Imatches {
   private model = Matches;
@@ -17,6 +18,20 @@ export default class ModMatches implements Imatches {
       return allMatches.filter((match) => match.inProgress === inProgress);
     }
     return allMatches;
+  }
+
+  async findMatchesFilter(query: string): Promise<MatchesInterface[]> {
+    const matches = await this.model.findAll({
+      where: {
+        inProgress: query === 'true',
+      },
+      include: [
+        { model: Teams, as: 'homeTeam', attributes: ['teamName'] },
+        { model: Teams, as: 'awayTeam', attributes: ['teamName'] },
+      ],
+      attributes: { exclude: ['home_team_id', 'away_team_id'] },
+    });
+    return matches;
   }
 
   async matchesFinish(id: string, match: MatchesInterface): Promise<MatchesInterface> {

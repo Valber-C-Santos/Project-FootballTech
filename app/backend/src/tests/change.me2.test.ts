@@ -5,7 +5,7 @@ import chaiHttp = require('chai-http');
 
 import { app } from '../app';
 import  { passwordIsNotValid } from './mocks/user.mock';
-
+import UserService from '../service/userService';
 
 chai.use(chaiHttp);
 

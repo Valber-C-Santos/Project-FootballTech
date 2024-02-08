@@ -1,9 +1,7 @@
-import { MatchesInterface } from '../Interfaces/matchesInterface';
+import { MatchesInterface, LeaderBoardInterface } from '../Interfaces/matchesInterface';
 
-const totalGames = (teamId: number, matches: MatchesInterface[]): number => {
-  const allGames = matches.filter(
-    (match) => match.homeTeamId === teamId || match.awayTeamId === teamId,
-  );
+const totalGamesHome = (teamId: number, matches: MatchesInterface[]): number => {
+  const allGames = matches.filter((match) => match.homeTeamId === teamId);
   return allGames.length;
 };
 
@@ -19,55 +17,80 @@ const totalVictoryHome = (teamId: number, matches: MatchesInterface[]): number =
   return vitoryHome.length;
 };
 
-const totalLosses = (teamId: number, matches: MatchesInterface[]): number => {
+const totalLossesHome = (teamId: number, matches: MatchesInterface[]): number => {
   const allLossesHome = matches
     .filter((match) => match.homeTeamId === teamId && match.homeTeamGoals < match.awayTeamGoals);
-  const AllLossesAway = matches
+  return allLossesHome.length;
+};
+
+const totalLossesAway = (teamId: number, matches: MatchesInterface[]): number => {
+  const allLossesAway = matches
     .filter((match) => match.awayTeamId === teamId && match.awayTeamGoals < match.homeTeamGoals);
-  const totalLossesGames = allLossesHome.length + AllLossesAway.length;
-  return totalLossesGames;
+  return allLossesAway.length;
 };
 
-const totalDraws = (teamId: number, matches: MatchesInterface[]): number => {
-  const AllDraws = matches
-    .filter((match) => (match.homeTeamId === teamId || match.awayTeamId === teamId)
-      && match.homeTeamGoals === match.awayTeamGoals);
-  return AllDraws.length;
+const totalDrawsHome = (teamId: number, matches: MatchesInterface[]): number => {
+  const allDrawhome = matches.filter((match) => match
+    .homeTeamId === teamId && match.homeTeamGoals === match.awayTeamGoals);
+  return allDrawhome.length;
 };
 
-const totalPoints = (teamId: number, matches: MatchesInterface[]): number => {
-  const AllWins = totalVictoryHome(teamId, matches) + totalVictoriesAway(teamId, matches);
-  const AllDraws = totalDraws(teamId, matches);
-  return (AllWins * 3) + AllDraws;
+const totalPointsHome = (teamId: number, matches: MatchesInterface[]): number => {
+  const AllWinsHome = totalVictoryHome(teamId, matches);
+  const AllDraws = totalDrawsHome(teamId, matches);
+  return (AllWinsHome * 3) + AllDraws;
 };
 
 const goalsFavor = (teamId: number, matches: MatchesInterface[]): number => {
   const goalsFavorHome = matches
     .filter((match) => match.homeTeamId === teamId)
     .reduce((acc, match) => acc + match.homeTeamGoals, 0);
-  const goalsFavorAway = matches
-    .filter((match) => match.awayTeamId === teamId)
-    .reduce((acc, match) => acc + match.awayTeamGoals, 0);
-  return goalsFavorHome + goalsFavorAway;
+  return goalsFavorHome;
 };
 
 const goalsOwn = (teamId: number, matches: MatchesInterface[]): number => {
   const goalsOwnHome = matches
     .filter((match) => match.homeTeamId === teamId)
     .reduce((acc, match) => acc + match.awayTeamGoals, 0);
-  const goalsOwnAway = matches
-    .filter((match) => match.awayTeamId === teamId)
-    .reduce((acc, match) => acc + match.homeTeamGoals, 0);
-  return goalsOwnHome + goalsOwnAway;
+  return goalsOwnHome;
+};
+
+const goalsBalance = (teamId: number, matches: MatchesInterface[]): number => {
+  const goalsBalanceHome = goalsFavor(teamId, matches) - goalsOwn(teamId, matches);
+  return goalsBalanceHome;
+};
+
+const efficiency = (teamId: number, matches: MatchesInterface[]): string => {
+  const totalPoints = totalPointsHome(teamId, matches);
+  const totalGames = totalGamesHome(teamId, matches);
+  const totalEfficiency = (((totalPoints / (totalGames * 3)) * 100).toFixed(2));
+  return totalEfficiency;
+};
+
+const standingsTeams = (team: LeaderBoardInterface[]): LeaderBoardInterface[] => {
+  const standings = team.sort((a, b) => {
+    if (a.totalPoints > b.totalPoints) return -1;
+    if (a.totalPoints < b.totalPoints) return 1;
+    if (a.goalsBalance > b.goalsBalance) return -1;
+    if (a.goalsBalance < b.goalsBalance) return 1;
+    if (a.goalsFavor > b.goalsFavor) return -1;
+    if (a.goalsFavor < b.goalsFavor) return 1;
+    return 0;
+  });
+  return standings;
 };
 
 export {
-  totalGames,
+  totalGamesHome,
   totalVictoryHome,
   totalVictoriesAway,
-  totalLosses,
-  totalDraws,
+  totalLossesHome,
+  totalLossesAway,
+  totalDrawsHome,
   goalsOwn,
   goalsFavor,
-  totalPoints,
+  totalPointsHome,
+  efficiency,
+  goalsBalance,
+  standingsTeams,
 };
